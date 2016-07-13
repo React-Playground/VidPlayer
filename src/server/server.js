@@ -4,6 +4,4 @@ import _ from 'lodash';
 
 import { filter } from 'lodash';
 
-console.log(filter);
 
-asfd()
