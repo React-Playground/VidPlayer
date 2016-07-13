@@ -6,4 +6,4 @@ import { filter } from 'lodash';
 
 console.log(filter);
 
-throw new Error('nooooooooooooo');
+asfd()
