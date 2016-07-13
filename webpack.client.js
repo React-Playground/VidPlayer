@@ -1,5 +1,6 @@
 var path = require('path');
 var webpack = require('webpack');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 const dirname = path.resolve('./');
 
 
@@ -13,6 +14,14 @@ function createConfig(isDebug) {
   const cssLoader = {test: /\.css$/, loader: "style!css"};
   const sassLoader = {test: /\.scss/, loader: "style!css!sass"};
   const appEntry = ["./src/client/application.js",];
+
+  if (!isDebug) {
+    plugins.push(new webpack.optimize.UglifyJsPlugin());
+    plugins.push(new ExtractTextPlugin("[name].css"));
+
+    cssLoader.loader = ExtractTextPlugin.extract("style", "css");
+    sassLoader.loader = ExtractTextPlugin.extract("style", "css!sass");
+  }
 
   return {
     devtool: devTool,
