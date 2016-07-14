@@ -4,23 +4,28 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 const dirname = path.resolve('./');
 
 
-const vendorModules = ["jquery"];
-
+const vendorModules = ['jquery'];
 
 function createConfig(isDebug) {
-  const devTool = isDebug ? "eval-source-map" : "source-map";
-  const plugins = [new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.js")];
+  const devTool = isDebug ? 'eval-source-map' : 'source-map';
+  const plugins = [new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.js')];
 
-  const cssLoader = {test: /\.css$/, loader: "style!css"};
-  const sassLoader = {test: /\.scss/, loader: "style!css!sass"};
-  const appEntry = ["./src/client/application.js",];
+  const cssLoader = {test: /\.css$/, loader: 'style!css'};
+  const sassLoader = {test: /\.scss/, loader: 'style!css!sass'};
+  const appEntry = ['./src/client/application.js',];
 
   if (!isDebug) {
     plugins.push(new webpack.optimize.UglifyJsPlugin());
-    plugins.push(new ExtractTextPlugin("[name].css"));
+    plugins.push(new ExtractTextPlugin('[name].css'));
 
-    cssLoader.loader = ExtractTextPlugin.extract("style", "css");
-    sassLoader.loader = ExtractTextPlugin.extract("style", "css!sass");
+    cssLoader.loader = ExtractTextPlugin.extract('style', 'css');
+    sassLoader.loader = ExtractTextPlugin.extract('style', 'css!sass');
+  } else {
+    plugins.push(new webpack.optimize.OccurenceOrderPlugin());
+    plugins.push(new webpack.HotModuleReplacementPlugin());
+    plugins.push(new webpack.NoErrorsPlugin());
+
+    appEntry.splice(0,0, 'webpack-hot-middleware/client');
   }
 
   return {
@@ -32,8 +37,9 @@ function createConfig(isDebug) {
     output: {
       path: path.join(dirname, 'public', 'build'),
       filename: '[name].js',
-      publicPath: '/build/'
+      publicPath: '/build/',
     },
+    publicPath: '/',
     resolve: {
       alias: {
         shared: path.join(dirname, 'src', 'shared')
@@ -41,9 +47,9 @@ function createConfig(isDebug) {
     },
     module: {
       loaders: [
-        { test: /\.js$/, loader: "babel", exclude: /node_modules/ },
-        { test: /\.js$/, loader: "eslint", exclude: /node_modules/ },
-        { test: /\.(png|jpg|jpeg|gif|woff|ttf|eot|svg|woff2)/, loader: "url-loader?limit=1024" },
+        { test: /\.js$/, loader: 'babel', exclude: /node_modules/ },
+        { test: /\.js$/, loader: 'eslint', exclude: /node_modules/ },
+        { test: /\.(png|jpg|jpeg|gif|woff|ttf|eot|svg|woff2)/, loader: 'url-loader?limit=1024' },
         cssLoader,
         sassLoader
       ]

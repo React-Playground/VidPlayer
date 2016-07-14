@@ -36,7 +36,6 @@ function prodClientBuild(callback) {
   })
 }
 
-
 //--------------------
 // Private Server Task
 const devServerWebpack = webpack(createServerConfig(true));
@@ -71,7 +70,6 @@ function prodServerBuild(callback) {
     outputWebpack("Prod:Server", error, stats);
     callback();
   });
-
 }
 
 //--------------------
