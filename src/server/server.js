@@ -5,6 +5,7 @@ import http from 'http';
 import socketIo from 'socket.io';
 import chalk from 'chalk';
 import {Observable} from 'rxjs';
+import '../shared/operators.js';
 
 import {ObservableSocket} from '../shared/observable-socket.js';
 

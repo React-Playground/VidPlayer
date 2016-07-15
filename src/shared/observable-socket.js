@@ -98,7 +98,6 @@ export class ObservableSocket {
   // On (server side)
   onAction(action, callback) {
     this._socket.on(action, (arg, id) => {
-      console.log(action);
       try {
         const value = callback(arg);
         console.log(value);

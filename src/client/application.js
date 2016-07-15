@@ -1,3 +1,4 @@
+import '../shared/operators.js';
 import './application.scss';
 
 import * as services from './services.js';
