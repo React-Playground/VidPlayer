@@ -1,6 +1,12 @@
 import $ from 'jquery';
 
+import {Observable} from 'rxjs';
 
+Observable.prototype.compSubscribe = function(component, ...args) {
+  let subscription = this.subscribe(...args);
+  component._onDetachHandlers.push(() => subscription.unsubscribe());
+  return subscription;
+};
 
 export class ComponentBase {
   attach($mount) {
