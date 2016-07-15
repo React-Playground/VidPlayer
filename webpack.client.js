@@ -25,7 +25,7 @@ function createConfig(isDebug) {
     plugins.push(new webpack.HotModuleReplacementPlugin());
     plugins.push(new webpack.NoErrorsPlugin());
 
-    appEntry.splice(0,0, 'webpack-hot-middleware/client');
+    appEntry.splice(0,0, 'webpack-hot-middleware/client?reload=true');
   }
 
   return {

@@ -1,6 +1,16 @@
 import './application.scss';
 
 import * as services from './services.js';
+/*******
+** Playground
+ ******/
+services.server.emitAction$('login', {username: 'foo', password: 'bar'})
+  .subscribe(user => {
+    console.log('We are logged in ' + user);
+  }, error => {
+    console.log(error);
+  });
+
 
 /*******
 ** Auth
