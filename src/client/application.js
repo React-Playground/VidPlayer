@@ -18,7 +18,8 @@ services.server.emitAction$('login', {username: 'foo', password: 'bar'})
 
 /*******
 ** Components
- ******/
+******/
+require('./components/player/player.js');
 
 /*******
 ** Bootstrap
