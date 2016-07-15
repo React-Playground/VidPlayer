@@ -29,10 +29,10 @@ require('./components/playlist/playlist.js');
  ******/
 services.socket.connect();
 
+services.server.emitAction$('user:list')
+  .subscribe(users => console.log(users));
+
 /*******
 ** Config
  ******/
-if (module.hot) {
-  module.hot.accept();
-}
 

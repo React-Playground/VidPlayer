@@ -72,7 +72,6 @@ export class ObservableSocket {
     });
 
     this._socket.on(`${action}:fail`, (arg, id) => {
-      console.log('GOTFAILED');
       const request = this._popRequest(id);
       if (!request) {
         return;
@@ -99,8 +98,10 @@ export class ObservableSocket {
   // On (server side)
   onAction(action, callback) {
     this._socket.on(action, (arg, id) => {
+      console.log(action);
       try {
         const value = callback(arg);
+        console.log(value);
 
         if (!value) {
           this._socket.emit(action, null, id);
@@ -145,6 +146,15 @@ export class ObservableSocket {
         console.error(error.stack || error);
       }
     });
+  }
+
+  onActions(actions) {
+    for (let action in actions) {
+      if (!actions.hasOwnProperty(action))
+        continue;
+
+      this.onAction(action, actions[action]);
+    }
   }
 
   _emitError(action, id, error) {

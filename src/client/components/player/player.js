@@ -8,7 +8,6 @@ class PlayerComponent extends ElementComponent {
   }
 
   _onAttach() {
-    console.log(this);
     const $title = this._$mount.find('h1');
     $title.text('Player!');
 
