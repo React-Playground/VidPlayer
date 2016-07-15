@@ -30,9 +30,11 @@ require('./components/playlist/playlist.js');
  ******/
 services.socket.connect();
 
-services.usersStore.state$.subscribe(state => {
-  console.log(state);
-});
+services.usersStore.login$('whoa')
+  .subscribe(user => {
+    console.log(user);
+  });
+
 
 /*******
 ** Config
