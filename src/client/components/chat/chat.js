@@ -3,12 +3,15 @@ import {ComponentBase} from '../../lib/component.js';
 
 import './chat.scss';
 
+import {usersStore} from '../../services.js';
+
 import {ChatListComponent, } from './list.js';
 import {ChatFormComponent} from './form.js';
 
 class ChatComponent extends ComponentBase {
-  constructor() {
+  constructor(usersStore) {
     super('ul');
+    this._users = usersStore;
   }
 
 
@@ -21,7 +24,7 @@ class ChatComponent extends ComponentBase {
     this.children.push(list);
 
 
-    const form = new ChatFormComponent();
+    const form = new ChatFormComponent(this._users);
     form.attach(this._$mount);
     this.children.push(form);
   }
@@ -30,7 +33,7 @@ class ChatComponent extends ComponentBase {
 let component;
 
 try {
-  component = new ChatComponent();
+  component = new ChatComponent(usersStore);
   component.attach($('section.chat'));
 } catch (e) {
   console.error(e);

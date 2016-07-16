@@ -37,6 +37,14 @@ export class UsersStore {
 
     this._server.on('connect', () => {
       this._server.emit('user:list');
+
+      if (!this.isLoggedIn) {
+        return;
+      }
+
+      this.login$(this._currentUser.name).subscribe(
+        user => console.log(`Logged in again as ${user.name}`),
+          error => alert(`Could not log back in ${error.message || 'Unknow Error'}`));
     });
 
   }
