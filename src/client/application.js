@@ -32,9 +32,15 @@ services.socket.connect();
 
 services.usersStore.login$('whoa')
   .subscribe(user => {
-    console.log(user);
   });
 
+services.usersStore.currentUser$
+  .subscribe(user => console.log(user));
+
+
+window.setTimeout(() => {
+  services.usersStore.logout$();
+}, 5000);
 
 /*******
 ** Config

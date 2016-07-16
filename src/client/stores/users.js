@@ -3,13 +3,17 @@ import _ from 'lodash';
 import {validateLogin} from '../../shared/validation/users.js';
 
 export class UsersStore {
+  get currentUser() { return this._currentUser; }
+  get isloggedIn() { return this._currentUser && this._currentUser.isLoggedIn; }
+
   constructor(server) {
     this._server = server;
 
     const defaultStore = {users: []};
     const events$ = Observable.merge(
       this._server.on$('user:list').map(opList),
-      this._server.on$('users:added').map(opAdd)
+      this._server.on$('users:added').map(opAdd),
+      this._server.on$('users:removed').map(opRemove)
     );
 
     this.state$ = events$
@@ -21,6 +25,15 @@ export class UsersStore {
     console.log(this);
     this.state$.connect();
 
+    //Auth
+    this.currentUser$ = Observable.merge(
+      this._server.on$('auth:login'),
+      this._server.on$('auth:logout').mapTo({}))
+      .startWith({})
+      .publishReplay(1)
+      .refCount();
+
+    this.currentUser$.subscribe(user => this._currentUser = user);
 
     this._server.on('connect', () => {
       this._server.emit('user:list');
@@ -36,6 +49,10 @@ export class UsersStore {
     }
 
     return this._server.emitAction$('auth:login', {name});
+  }
+
+  logout$() {
+    return this._server.emitAction$('auth:logout');
   }
 }
 
@@ -60,6 +77,20 @@ function opAdd(user) {
     state.users.splice(insertIndex, 0, user);
     return {
       type: 'add',
+      user: user,
+      state: state
+    };
+  };
+}
+
+function opRemove(user) {
+  return state => {
+    const index = _.findIndex(state.users, {name: user.name});
+    if (index !== -1) {
+      state.users.splice(index, 1);
+    }
+    return {
+      type: 'remove',
       user: user,
       state: state
     };
