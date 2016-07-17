@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "postinstall": "./node_modules/.bin/gulp prod",
     "start": "node build/server"
   },
   "author": "",
