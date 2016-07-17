@@ -5,13 +5,16 @@ import {ElementComponent} from '../../lib/component.js';
 
 
 export class ChatFormComponent extends ElementComponent {
-  constructor(usersStore) {
+  constructor(server, usersStore, chatStore) {
     super('div');
     this._users = usersStore;
+    this._chat = chatStore;
+    this._server = server;
     this.$element.addClass('chat-form');
   }
 
   _onAttach() {
+    console.log('form', this);
     this._$error = $('<div class="chat-error" />').appendTo(this.$element);
     this._$input = $('<input type="text" class="chat-input" />').appendTo(this.$element);
 
@@ -38,8 +41,10 @@ export class ChatFormComponent extends ElementComponent {
     });
   }
 
-  _sendMessage$(value) {
-    return Observable.empty();
+  _sendMessage$(message) {
+    return this._chat.sendMessage$(message).catchWrap()
+      .do(() => this._$input.val(''));
+
   }
 
   _login$(username) {

@@ -22,7 +22,6 @@ export class UsersStore {
     }, {state: defaultStore})
     .publishReplay(1);
 
-    console.log(this);
     this.state$.connect();
 
     //Auth
