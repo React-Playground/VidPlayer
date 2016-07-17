@@ -14,12 +14,48 @@ export class ChatListComponent extends ElementComponent {
 
   _onAttach() {
     Observable.merge(
-      this._chat.messages$.map(chatMessageFactory))
+      this._chat.messages$.map(chatMessageFactory),
+      this._users.state$.map(userActionFactory),
+      this._server.status$.map(serverStatusFactory))
       .filter(m => m)
       .compSubscribe(this, $newElement => {
         this.$element.append($newElement);
+        this.$element[0].scrollTop = this.$element[0].scrollHeight;
       });
   }
+}
+
+function serverStatusFactory({isConnected, isReconecting, attemp}) {
+  let statusMessage = null;
+  if (isConnected) {
+    statusMessage = 'Connected';
+  } else if (isReconecting) {
+    statusMessage = `reconnecting (attemp ${attemp})`;
+  } else {
+    statusMessage = 'Signal loss';
+  }
+
+  if (statusMessage == null) {
+    return null;
+  }
+
+  return $('<li class="server-status" />').append([
+    $('<span class="author" />').text('system'),
+    $('<span class="message" />').text(statusMessage),
+    $('<span class="time" />').text(moment().format('h:mm:ss a'))
+  ]);
+}
+
+function userActionFactory({type, user}) {
+  if (type !== 'add' && type !== 'remove') {
+    return null;
+  }
+
+  return $(`<li class="user-action ${type}" />`).append([
+    $('<span class="author" />').text(user.name).css('color', user.color),
+    $('<span class="message" />').text(type === 'add' ? 'Joined' : 'Left'),
+    $('<span class="time" />').text(moment().format('h:mm:ss a'))
+  ]);
 }
 
 function chatMessageFactory({user, message, type, time}) {
