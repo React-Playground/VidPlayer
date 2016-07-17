@@ -30,7 +30,6 @@ gulp.task('prod', gulp.series('clean', gulp.parallel(prodClientBuild, prodServer
 // Private Client Task
 function prodClientBuild(callback) {
   const compiler = webpack(createClientConfig(false));
-  console.log(compiler);
   compiler.run((err, stats) => {
     outputWebpack('Prod:Client', err, stats);
     callback();
