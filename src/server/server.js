@@ -9,6 +9,8 @@ import '../shared/operators.js';
 
 import {ObservableSocket} from '../shared/observable-socket.js';
 
+import {FileRepository} from '../server/repositories/file.js';
+
 import {UserModule} from './modules/users.js';
 import {ChatModule} from './modules/chat.js';
 import {PlaylistModule} from './modules/playlist.js';
@@ -67,7 +69,7 @@ app.get('/', (req, res) => {
  ************ Services
  ******/
 const videoServices = [];
-const playlistRepository = {};
+const playlistRepository = new FileRepository('./data/playlist.json');
 
 /*******
  ************ Modules

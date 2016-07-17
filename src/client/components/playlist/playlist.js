@@ -3,14 +3,18 @@ import {ComponentBase} from '../../lib/component.js';
 
 import './playlist.scss';
 
+import * as services from '../../services.js';
+
 import {PlayListListComponent} from './list.js';
 import {PlayListToolbarComponent} from './toolbar.js';
 import {PlayListContextComponent} from './context-menu.js';
 import {PlayListChromeComponent} from './chrome.js';
 
-class ChatComponent extends ComponentBase {
-  constructor() {
+class PlaylistComponent extends ComponentBase {
+  constructor(playlistStore, usersStore) {
     super();
+    this._playlist = playlistStore;
+    this._users = usersStore;
   }
 
   _onAttach() {
@@ -24,7 +28,7 @@ class ChatComponent extends ComponentBase {
     this._$chrome = $('<div class="chrome" />').appendTo(this._$mount);
     this._$scrollArea = $('<div class="scroll-area" />').appendTo(this._$chrome);
 
-    const list = new PlayListListComponent();
+    const list = new PlayListListComponent(this._playlist, this._users);
     list.attach(this._$scrollArea);
 
     const contextMenu = new PlayListContextComponent();
@@ -45,7 +49,7 @@ class ChatComponent extends ComponentBase {
 let component;
 
 try {
-  component = new ChatComponent();
+  component = new PlaylistComponent(services.playlistStore, services.usersStore);
   component.attach($('section.playlist'));
 } catch (e) {
   console.error(e);
